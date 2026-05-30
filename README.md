@@ -30,6 +30,7 @@ A lightweight asynchronous Telegram bot designed to monitor and manage a local S
     - `CLASH_API_URL`: The external controller address (e.g., `http://127.0.0.1:9090`).
     - `CLASH_API_SECRET`: The secret set in your Sing-box config (leave empty if none).
     - `ALLOWED_CHAT_ID`: Your Telegram Chat ID to secure the bot.
+    - `HTTP_TELEGRAM_PROXY`: (Optional) HTTP proxy for the bot to connect to Telegram (e.g., `http://127.0.0.1:7890`).
 
 ## Usage
 

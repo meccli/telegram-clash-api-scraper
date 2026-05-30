@@ -3,3 +3,4 @@ aiohttp
 matplotlib
 python-dotenv
 aiofiles
+aiohttp-socks

@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
 from aiogram.types import BufferedInputFile
+from aiogram.client.session.aiohttp import AiohttpSession
 from dotenv import load_dotenv
 
 from clash_api import ClashAPI
@@ -18,6 +19,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 CLASH_API_URL = os.getenv("CLASH_API_URL")
 CLASH_API_SECRET = os.getenv("CLASH_API_SECRET")
 ALLOWED_CHAT_ID = os.getenv("ALLOWED_CHAT_ID")
+HTTP_TELEGRAM_PROXY = os.getenv("HTTP_TELEGRAM_PROXY")
 
 # Convert ALLOWED_CHAT_ID to int if it exists
 if ALLOWED_CHAT_ID:
@@ -31,7 +33,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Initialize Bot and Dispatcher
-bot = Bot(token=BOT_TOKEN)
+session = AiohttpSession(proxy=HTTP_TELEGRAM_PROXY) if HTTP_TELEGRAM_PROXY else None
+bot = Bot(token=BOT_TOKEN, session=session)
 dp = Dispatcher()
 clash = ClashAPI(CLASH_API_URL, CLASH_API_SECRET)
 
