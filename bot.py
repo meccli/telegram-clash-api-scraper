@@ -171,13 +171,39 @@ async def cmd_proxies(message: types.Message):
         data = await clash.get_proxies()
         proxies = data.get('proxies', {})
         
-        output = ["📍 **Proxy Groups Status**"]
+        output = ["📍 **Proxy Groups & Nodes**\n"]
         for name, info in proxies.items():
+            # Only process groups
             if info.get('type') in ['Selector', 'URLTest', 'Fallback']:
                 selected = info.get('now', 'N/A')
-                output.append(f"• **{name}**: {selected}")
+                members = info.get('all', [])
+                
+                output.append(f"🆔 **{name}**")
+                
+                for m_name in members:
+                    m_info = proxies.get(m_name, {})
+                    history = m_info.get('history', [])
+                    delay = history[-1].get('delay', 0) if history else 0
+                    
+                    # Formatting: checkmark for selected, dash for others
+                    prefix = "✅" if m_name == selected else "▫️"
+                    delay_str = f" `{delay}ms`" if delay > 0 else " `N/A`"
+                    output.append(f"  {prefix} {m_name}{delay_str}")
+                
+                output.append("") # Spacer between groups
         
-        await message.answer("\n".join(output), parse_mode="Markdown")
+        if len(output) <= 1:
+            await message.answer("No proxy groups found.")
+            return
+
+        full_text = "\n".join(output)
+        # Handle long messages
+        if len(full_text) > 4000:
+             for i in range(0, len(full_text), 4000):
+                 await message.answer(full_text[i:i+4000], parse_mode="Markdown")
+        else:
+            await message.answer(full_text, parse_mode="Markdown")
+            
     except Exception as e:
         await message.answer(f"Error: {e}")
 
